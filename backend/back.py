@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Form, File, UploadFile
 from summary import summary
 from fastapi.middleware.cors import CORSMiddleware
 import os
-#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+from io import BytesIO
 
 app = FastAPI()
 
@@ -23,7 +23,20 @@ app.add_middleware(
 
 @app.post("/text_to_summarize")
 async def summarize_text(text: str=Form() ) -> str:
-    summarize_text = summary('french', text)
-    while len(summarize_text) > len(text) / 4 :
-        summarize_text = summary('french', summarize_text)
+    print(text)
+    summarize_text = summary('french', str(text))
     return str(summarize_text)
+
+@app.post("/file_to_summarize")
+async def summarize_text(file: UploadFile) -> str:
+    if file.filename.endswith('.txt') :
+        text = file.file.read().decode("utf-8", "strict") 
+        summarize_text = summary('french', str(text))
+        return str(summarize_text)
+    elif file.filename.endswith('.odt') :
+        text = BytesIO(file.file.read()).read()
+        text = text.decode("utf-8")
+        print(100*'-')
+        print(text)
+        summarize_text = summary('french', str(text))
+        return str(summarize_text)
