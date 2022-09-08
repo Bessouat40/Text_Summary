@@ -23,7 +23,6 @@ app.add_middleware(
 
 @app.post("/text_to_summarize")
 async def summarize_text(text: str=Form() ) -> str:
-    print(text)
     summarize_text = summary('french', str(text))
     return str(summarize_text)
 
@@ -36,7 +35,5 @@ async def summarize_text(file: UploadFile) -> str:
     elif file.filename.endswith('.odt') :
         text = BytesIO(file.file.read()).read()
         text = text.decode("utf-8")
-        print(100*'-')
-        print(text)
         summarize_text = summary('french', str(text))
         return str(summarize_text)
