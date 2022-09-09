@@ -38,7 +38,7 @@ export default class MultilineTextFields extends Component {
                 }}
                 )
     .then(res => 
-      this.setState({output: res.data}),
+      this.setState({output: res.data[0], value: res.data[1]}),
       )
     
   };
@@ -66,13 +66,13 @@ export default class MultilineTextFields extends Component {
                 }}
                 )
     .then(res => 
-      this.setState({output: res.data}),
+      this.setState({output: res.data[0], value: res.data[1]}),
       )
     
   };
 
   onDownload = () => {
-    var data = new Blob([this.state.output], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    var data = new Blob([this.state.output], {type: 'application/zip'});
     var URL = window.URL.createObjectURL(data);
     var link = document.createElement('a');
     link.href = URL;
